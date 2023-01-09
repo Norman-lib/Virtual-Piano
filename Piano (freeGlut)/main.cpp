@@ -16,7 +16,7 @@ GLfloat straffeSpeed = 0;
 GLfloat upDownMove = 0;
 
 Vector3D camPos;
-Vector3D targetPos;
+Vector3D targetPos = Vector3D(0, 0, 0);;
 Vector3D forwardMove;
 Vector3D at;
 Vector3D rightMove;
@@ -83,17 +83,15 @@ vector<bool> isPressedNoir(10, false);
 
 
 void cameraMovement(float dM, float dS) {
-    // est-on en "fly" mode ou non ?
-    // FPS mode
+    
         camPos += dM * forwardMove;
         camPos += dS * rightMove;
-        if (dS != 0) {
-            targetPos = camPos;
+
+        if (dS !=0) {
+            at = Vector3D(camPos.getVx(), 1, 0 );
         }
-        if (dM != 0 ) {
-            targetPos = camPos + forwardMove;
-        }
-    // Mettre a jour la cible
+      
+    
 
 }
 
@@ -107,7 +105,7 @@ GLvoid affichage2() {
     glEnable(GL_DEPTH_TEST);
     //animation
     glLoadIdentity();
-    gluLookAt(camPos.getVx(), camPos.getVy(), camPos.getVz() + distance1, targetPos.getVx(), targetPos.getVx(), targetPos.getVx(), upWorld.getVx(), upWorld.getVy(), upWorld.getVz());
+    gluLookAt(camPos.getVx(), camPos.getVy(), camPos.getVz() , at.getVx(), at.getVy(), at.getVz(), upWorld.getVx(), upWorld.getVy(), upWorld.getVz());
     glMatrixMode(GL_MODELVIEW);
     glTranslatef(-4.0f, 0.0f, 0.0f);
 
@@ -547,16 +545,16 @@ GLvoid souris3(int boutton, int etat, int x, int y)
 void catchKey(int key, int x, int y) {
     switch (key) {
     case GLUT_KEY_LEFT:
-        straffeSpeed = 0.001f;
+        straffeSpeed = -0.01f;
         break;
     case GLUT_KEY_RIGHT:
-        straffeSpeed = -0.001f;
+        straffeSpeed = +0.01f;
         break;
     case GLUT_KEY_UP:
-        upDownMove = 0.001f;
+        upDownMove = 0.01f;
         break;
     case GLUT_KEY_DOWN:
-        upDownMove = -0.001f;
+        upDownMove = -0.01f;
         break;
     }
    // cout << position << endl;
@@ -599,13 +597,15 @@ void mouseWheel(int button, int dir, int x, int y)
 {
     if (dir > 0)
     {
-        distance1 -= 0.1f;
+        camPos.setVz(camPos.getVz() - 0.1) ;
     }
     else
     {
-        distance1 += 0.1f;
-        distance1 += 0.1f;
+        //distance1 += 0.1f;
+        camPos.setVz(camPos.getVz() + 0.1);
+      
     }
+    glutPostRedisplay();
 
     return;
 }
@@ -633,25 +633,25 @@ void main(int argc, char* argv[])
     glutSpecialUpFunc(catchKeyDown);
     glutMouseWheelFunc(mouseWheel);
     glutReshapeFunc(redimensionner);
-    camPos = Vector3D(0, -1, 3);
+    camPos = Vector3D(0, -1, 6);
     // on initialise les vecteurs 'view'
-    forwardView = Vector3D(0, 0, 0);
+    forwardView = Vector3D(0, 1, 0);
     upWorld = Vector3D(0, 1, 0);
     rightView = Vector3D(1, 0, 0);
     // Pour le FPS mode
-    forwardMove = Vector3D(0, 0, -1);
+    forwardMove = Vector3D(0, 0, 1);
     at = Vector3D(0,1,0);
     rightMove = Vector3D(1, 0, 0);
     // on initialise la cible a partir de la camera et du vecteur vision
-    targetPos = camPos + forwardView;
+    targetPos = Vector3D(0,3,0);
 
     glutDisplayFunc(affichage2);
-   // glutIdleFunc(affichage2);
+    glutIdleFunc(affichage2);
     glClearColor(0.4f, 0.0f, 0.0f, 0.0f);
      
 
     // pour voir un piano 2D 
-    glutCreateWindow("PIANO2D");
+   
     glClearColor(0.4f, 0.0f, 0.0f, 0.0f);
     glutKeyboardFunc(clavier);
     glutKeyboardUpFunc(clavierUp);
@@ -672,7 +672,7 @@ void main(int argc, char* argv[])
     // on initialise la cible a partir de la camera et du vecteur vision
     targetPos = camPos + forwardView;
 
-    glutDisplayFunc(affichage2D);
+   // glutDisplayFunc(affichage2D);
     ////glutIdleFunc(affichage2D);
     // Lancement de la boucle infinie GLUT
     glutMainLoop();

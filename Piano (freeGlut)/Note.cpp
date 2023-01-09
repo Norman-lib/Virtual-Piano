@@ -140,20 +140,16 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
                 glEnd();
 
             }
+            glBegin(GL_LINES);
+            int i = 0;
+            int j = 0;
+            int i1 =0;
+            int j1= 3;
+            glVertex3f(cube3[face[i][j]][0], cube3[face[i][j]][1] , cube3[face[i][j]][2]);
 
-               /* glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-                glBegin(GL_LINES);
-                glLineWidth(10);
-                for (int j = 0; j < 2; j++) {
-                    glVertex3f(cube3[face[0][j]][0], cube3[face[0][j]][1], cube3[face[0][j]][2]);
-                }
-                glEnd();
-                glBegin(GL_LINES);
-                glLineWidth(10);
-                for (int j = 0; j < 2; j++) {
-                    glVertex3f(cube3[face[1][j]][0], cube3[face[1][j]][1], cube3[face[1][j]][2]);
-                }
-                glEnd();*/
+            glVertex3f(cube3[face[i1][j1]][0], cube3[face[i1][j1]][1], cube3[face[i1][j1]][2]);
+            glEnd();
+              
      
 
         }
@@ -167,7 +163,8 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
                 }
                 glEnd();
             }
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 6; i++) 
+            {
                 glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
                 glBegin(GL_LINES);
                 glLineWidth(10);
@@ -177,6 +174,15 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
                 glEnd();
 
             }
+            glBegin(GL_LINES);
+            int i = 0;
+            int j = 0;
+            int i1 = 0;
+            int j1 = 3;
+            glVertex3f(cube4[face[i][j]][0], cube4[face[i][j]][1], cube4[face[i][j]][2]);
+
+            glVertex3f(cube4[face[i1][j1]][0], cube4[face[i1][j1]][1], cube4[face[i1][j1]][2]);
+            glEnd();
 
            
         }
@@ -207,6 +213,15 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
             }
 
         }
+        glBegin(GL_LINES);
+        int i = 0;
+        int j = 0;
+        int i1 = 0;
+        int j1 = 3;
+        glVertex3f(cube41[face[i][j]][0], cube41[face[i][j]][1], cube41[face[i][j]][2]);
+
+        glVertex3f(cube41[face[i1][j1]][0], cube41[face[i1][j1]][1], cube41[face[i1][j1]][2]);
+        glEnd();
 
     }
 };
