@@ -40,6 +40,7 @@ GLvoid Note::drawNote(float couleur) {
     if (couleur == 1.0f) {
 
         glColor4f(R, G, B, 0.5f);
+
         glBegin(GL_QUADS);
         for (int i = 0; i < 4; i++) {
             glVertex3f(cube[i].x, cube[i].y, cube[i].z);
@@ -140,9 +141,24 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
 
             }
 
+               /* glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+                glBegin(GL_LINES);
+                glLineWidth(10);
+                for (int j = 0; j < 2; j++) {
+                    glVertex3f(cube3[face[0][j]][0], cube3[face[0][j]][1], cube3[face[0][j]][2]);
+                }
+                glEnd();
+                glBegin(GL_LINES);
+                glLineWidth(10);
+                for (int j = 0; j < 2; j++) {
+                    glVertex3f(cube3[face[1][j]][0], cube3[face[1][j]][1], cube3[face[1][j]][2]);
+                }
+                glEnd();*/
+     
+
         }
         else { // les noires
-            glBegin(GL_QUADS);
+            
             glColor4f(R, G, B, 1.0f);
             for (int i = 0; i < 6; i++) {
                 glBegin(GL_POLYGON);
@@ -151,16 +167,26 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
                 }
                 glEnd();
             }
-            glEnd();
+            for (int i = 0; i < 6; i++) {
+                glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+                glBegin(GL_LINES);
+                glLineWidth(10);
+                for (int j = 0; j < 2; j++) {
+                    glVertex3f(cube4[face[i][j]][0], cube4[face[i][j]][1], cube4[face[i][j]][2]);
+                }
+                glEnd();
+
+            }
+
+           
         }
     }
     else // les notes sont actives 
     {
         distance2 = -0.1f;
-
+        glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
         if (couleur == 1.0f) {
-            glBegin(GL_QUADS);
-            glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
+            
             for (int i = 0; i < 6; i++) {
                 glBegin(GL_POLYGON);
                 for (int j = 0; j < 4; j++) {
@@ -168,10 +194,8 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
                 }
                 glEnd();
             }
-            glEnd();
         }
         else {
-            glBegin(GL_QUADS);
             glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 
             for (int i = 0; i < 6; i++) {
@@ -181,7 +205,7 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
                 }
                 glEnd();
             }
-            glEnd();
+
         }
 
     }
@@ -207,7 +231,7 @@ void Note::drawChar(float couleur) {
     if (couleur == 1.0f) {
         glPushMatrix();
         glColor3f(0.0f, 0.0f, 0.0f);
-        glTranslatef(0.20f, 0.25f, distance2);
+        glTranslatef(0.20f, 0.25f, distance2-0.05);
         char* ptr = &c;
         vBitmapOutput(0, 0, ptr, GLUT_BITMAP_HELVETICA_18);
         glPopMatrix();
@@ -216,7 +240,7 @@ void Note::drawChar(float couleur) {
     else if (couleur == 0.0f) {
         glPushMatrix();
         glColor3f(0.0f, 0.0f, 0.0f);
-        glTranslatef(0.45f, 1.1f, distance2);
+        glTranslatef(0.45f, 1.1f, distance2-0.05);
         char* ptr = &c;
         vBitmapOutput(0, 0, ptr, GLUT_BITMAP_HELVETICA_18);
         glPopMatrix();
