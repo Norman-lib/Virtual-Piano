@@ -8,6 +8,8 @@ Note::Note(char a) {
     MusicOn = false;
 };
 
+float distance2;
+
 typedef struct {
     float x;
     float y;
@@ -35,29 +37,57 @@ void vBitmapOutput(int x, int y, char* string, void* font)
     glutBitmapCharacter(font, string[0]); // Affiche chaque caractère de la chaîne
 }
 
-GLvoid Note::drawNote(float couleur) {
+GLvoid Note::drawNote(float couleur, bool musicOn) {
+    if (!musicOn) // le piano est au repos
+    {
+        if (couleur == 1.0f) {
 
-    if (couleur == 1.0f) {
+            glColor4f(R, G, B, 0.5f);
 
-        glColor4f(R, G, B, 0.5f);
+            glBegin(GL_QUADS);
+            for (int i = 0; i < 4; i++) {
+                glVertex3f(cube[i].x, cube[i].y, cube[i].z);
+            }
+            glEnd();
 
-        glBegin(GL_QUADS);
-        for (int i = 0; i < 4; i++) {
-            glVertex3f(cube[i].x, cube[i].y, cube[i].z);
+
         }
-        glEnd();
+        else if (couleur == 0.0f) {
+            glColor4f(R, G, B, 0.5f);
 
+            glBegin(GL_QUADS);
+            for (int i = 0; i < 4; i++) {
+                glVertex3f(cube1[i].x, cube1[i].y, cube1[i].z);
+            }
 
+            glEnd();
+        }
     }
-    else if (couleur == 0.0f) {
-        glColor4f(R, G, B, 0.5f);
+    else {
+    
+        if (couleur == 1.0f) {
 
-        glBegin(GL_QUADS);
-        for (int i = 0; i < 4; i++) {
-            glVertex3f(cube1[i].x, cube1[i].y, cube1[i].z);
+            glColor4f(0.529f, 0.808f, 0.9215f, 1.0f);
+
+            glBegin(GL_QUADS);
+            for (int i = 0; i < 4; i++) {
+                glVertex3f(cube[i].x, cube[i].y, cube[i].z);
+            }
+            glEnd();
+
+
         }
+        else if (couleur == 0.0f) {
+            glColor4f(0.529f, 0.808f, 0.9215f, 1.0f);
 
-        glEnd();
+
+            glBegin(GL_QUADS);
+            for (int i = 0; i < 4; i++) {
+                glVertex3f(cube1[i].x, cube1[i].y, cube1[i].z);
+            }
+
+            glEnd();
+        }
     }
 };
 
@@ -71,22 +101,22 @@ vector<vector<float>> cube3{
     {0.485f, 2.0f, -1.0f} ,
     {0.485f , 0.0f, -1.0f} };
 
-vector<vector<float>> cube31{  /// à voir !!! 
-    {0.0f, 0.0f, -0.1f}, // 1 entre dans le z
-   {0.0f, 2.0f, 0.0f}, // 2 fixe
-   { 0.485f, 2.0f, 0.0f},  //3 fixe entre dans le z 
-   { 0.485f,0.0f, 0.0f - 0.1f}, //4
-    {0.0f, 0.0f , -1.0f }, //1'
-    {0.0f, 2.0f , -1.0f} , // 2'
-    {0.485f, 2.0f, -1.0f} , //3' 
-    {0.485f , 0.0f, -1.0f } }; //4'
+vector<vector<float>> cube31{ 
+    {0.0f, 0.0f, -0.1f}, 
+   {0.0f, 2.0f, 0.0f}, 
+   { 0.485f, 2.0f, 0.0f}, 
+   { 0.485f,0.0f, 0.0f - 0.1f},
+    {0.0f, 0.0f , -1.0f }, 
+    {0.0f, 2.0f , -1.0f} ,
+    {0.485f, 2.0f, -1.0f} ,
+    {0.485f , 0.0f, -1.0f } }; 
 
 vector<vector<float>>  cube4{
    {0.375f,1.0f, 0.0f},
    {0.375f, 2.0f,0.0f},
    { 0.625f, 2.0f, 0.0f},
    { 0.625f,1.0f, 0.0f},
-    {0.375f,1.0f, -0.5f}, // 1'
+    {0.375f,1.0f, -0.5f},
    {0.375f, 2.0f,-0.5f},
    { 0.625f, 2.0f, -0.5f},
    { 0.625f,1.0f, -0.5f},
@@ -97,13 +127,12 @@ vector<vector<float>>  cube41{
    {0.375f, 2.0f,0.0f},
    { 0.625f, 2.0f , 0.0f},
    { 0.625f,1.0f  , 0.0f - 0.1f},
-    {0.375f,1.0f, -0.5f}, // 1'
+    {0.375f,1.0f, -0.5f}, 
    {0.375f, 2.0f,-0.5f},
    { 0.625f, 2.0f, -0.5f},
    { 0.625f,1.0f, -0.5f - 0.1f},
 };
 
-float distance2;
 
 int face[6][4] = {
    {0,1,2,3},
@@ -143,10 +172,16 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
             glBegin(GL_LINES);
             int i = 0;
             int j = 0;
-            int i1 =0;
+            int i1 =1;
             int j1= 3;
             glVertex3f(cube3[face[i][j]][0], cube3[face[i][j]][1] , cube3[face[i][j]][2]);
 
+            glVertex3f(cube3[face[i][j1]][0], cube3[face[i][j1]][1], cube3[face[i][j1]][2]);
+            glEnd();
+            glBegin(GL_LINES);
+
+
+            glVertex3f(cube3[face[i][j1]][0], cube3[face[i][j1]][1], cube3[face[i][j1]][2]);
             glVertex3f(cube3[face[i1][j1]][0], cube3[face[i1][j1]][1], cube3[face[i1][j1]][2]);
             glEnd();
               
@@ -177,10 +212,17 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
             glBegin(GL_LINES);
             int i = 0;
             int j = 0;
-            int i1 = 0;
+            int i1 = 1;
             int j1 = 3;
             glVertex3f(cube4[face[i][j]][0], cube4[face[i][j]][1], cube4[face[i][j]][2]);
 
+            glVertex3f(cube4[face[i][j1]][0], cube4[face[i][j1]][1], cube4[face[i][j1]][2]);
+            glEnd();
+
+            glBegin(GL_LINES);
+          
+
+            glVertex3f(cube4[face[i][j1]][0], cube4[face[i][j1]][1], cube4[face[i][j1]][2]);
             glVertex3f(cube4[face[i1][j1]][0], cube4[face[i1][j1]][1], cube4[face[i1][j1]][2]);
             glEnd();
 
@@ -189,8 +231,8 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
     }
     else // les notes sont actives 
     {
-        distance2 = -0.1f;
-        glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+        distance2 = -0.0f;
+        glColor4f(0.529f, 0.808f, 0.9215f, 1.0f);
         if (couleur == 1.0f) {
             
             for (int i = 0; i < 6; i++) {
@@ -202,7 +244,7 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
             }
         }
         else {
-            glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+            glColor4f(0.0f, 1.0f, 0.6f, 1.0f);
 
             for (int i = 0; i < 6; i++) {
                 glBegin(GL_POLYGON);
@@ -220,7 +262,8 @@ GLvoid Note::drawNote3(float couleur, bool musicOn) {
         int j1 = 3;
         glVertex3f(cube41[face[i][j]][0], cube41[face[i][j]][1], cube41[face[i][j]][2]);
 
-        glVertex3f(cube41[face[i1][j1]][0], cube41[face[i1][j1]][1], cube41[face[i1][j1]][2]);
+        glVertex3f(cube41[face[i][j1]][0], cube41[face[i][j1]][1], cube41[face[i][j1]][2]);
+
         glEnd();
 
     }
@@ -272,7 +315,4 @@ void Note::playMusic() {
     ISoundEngine* SoundEngine = createIrrKlangDevice();
     //const char* c= &music;
     SoundEngine->play2D(s, false);
-
-    // coloration de l'espace de note 
-
 };

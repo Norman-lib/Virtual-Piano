@@ -49,8 +49,8 @@ public:
 	float getId() { return id; };
 	char getChar();
 	//methodes
-	GLvoid drawNote(float);
-	GLvoid drawNote3(float couleur, bool);
+	GLvoid drawNote(float , bool);
+	GLvoid drawNote3(float , bool);
 	void playMusic();
 	void drawChar(float);
 };

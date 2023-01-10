@@ -6,23 +6,19 @@
 // structure de données pour stocker les infos d'un vertex
 
 // Souris
-GLint oldX = 0;
-GLint oldY = 0;
 GLboolean boutonClick = false;
-
-GLfloat position = 0;
-GLfloat distance1 = 3;
+// mouvement effectué par les flèches du clavier
 GLfloat straffeSpeed = 0;
 GLfloat upDownMove = 0;
-
+// Camera
 Vector3D camPos;
+Vector3D camPos2D = Vector3D(-0.5,0.5, 4);
 Vector3D targetPos = Vector3D(0, 0, 0);;
 Vector3D forwardMove;
 Vector3D at;
+Vector3D at2D = camPos2D + Vector3D(0,0,-1);
 Vector3D rightMove;
 Vector3D upWorld;
-Vector3D forwardView;
-Vector3D rightView;
 
 // Taille de la fenêtre
 int windowW = 640;
@@ -32,7 +28,7 @@ float near1 = 0.1f;
 float far1 = 100.0f;
 
 
-//import des fichiers son .ogg
+//import des fichiers son (.ogg)
 
 map<string, vector<float>> noteBlanches{
     {"piano\\white notes\\100.ogg", {1.0f,1.0f,1.0f}},
@@ -66,21 +62,23 @@ map<string, vector<float>> noteNoires{
 
 };
 vector<float> identifiantNoir{ -14208,-11678,11092,-13955,-13958,-11708,10792,13622,-11425 , 13875};
-//les vecteurs de notes
+
+//les vecteurs de pointeurs notes
 vector<Note*> blanc;
 vector<Note*> noir;
 
-// vecteurs des keys 
-const char* keyBlanc = "qsdfghjklmwxcv";
-const char* keyNoir = "azertyuiop";
+// vecteurs des keys du clavier 
+const char* keyBlanc = "qsdfghjklm4561";
+//const char* keyNoir = "azertyuiop";
 
-//un vecteur possedant les état enfoncé ou ralché des bouttons
+const char* keyNoir = "zetyuop$*7";
+
+//un vecteur possedant l'état enfoncé ou relaché des bouttons
 vector<bool> isPressedBlanc(14, false);
 vector<bool> isPressedNoir(10, false);
 
-// Definition de la fonction d'affichage
-// piano 3D
 
+//fonction de mouvement de la camera
 
 void cameraMovement(float dM, float dS) {
     
@@ -90,33 +88,29 @@ void cameraMovement(float dM, float dS) {
         if (dS !=0) {
             at = Vector3D(camPos.getVx(), 1, 0 );
         }
-      
-    
-
 }
 
+// Definition de la fonction d'affichage
+// piano 3D
 
-GLvoid affichage2() {
+GLvoid affichage3D() {
 
     cameraMovement(upDownMove, straffeSpeed);
-   // cout << upDownMove << endl;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //profondeur
     glEnable(GL_DEPTH_TEST);
-    //animation
     glLoadIdentity();
     gluLookAt(camPos.getVx(), camPos.getVy(), camPos.getVz() , at.getVx(), at.getVy(), at.getVz(), upWorld.getVx(), upWorld.getVy(), upWorld.getVz());
     glMatrixMode(GL_MODELVIEW);
     glTranslatef(-4.0f, 0.0f, 0.0f);
-
+    // on remplit blanc et noir en les dessinant 
     auto it = noteBlanches.begin();
     for (int i = 0; i < 14; i++) {
         glPushMatrix();
         glTranslatef(0.5f * i, 0.0f, 0.0f);
-        vector<float> v(3, 1.0f);
         Note* n = new Note(keyBlanc[i]);
-        n->setCouleur(1.0);
-        vector<float> vec{ -4.0f + 1.0f * i ,0.0f };
+        n->setCouleur(1.0f);
         n->setMusic(it->first);
         n->setR(it->second[0]);  n->setG(it->second[1]); n->setB(it->second[2]);
         n->setId(identifiantBlanc[i]);
@@ -135,10 +129,8 @@ GLvoid affichage2() {
     for (int i = 0; i < 2; i++) {
         glPushMatrix();
         glTranslatef(0.5f * i, 0.0f, 0.2f);
-        vector<float> v(3, 0.0f);
         Note* n = new Note(keyNoir[i]);
-        n->setCouleur(0.0);
-        vector<float> vec{ -4.0f + 0.5f * i ,1.0f };
+        n->setCouleur(0.0f);
         n->setMusic(itN->first);
         n->setR(itN->second[0]); n->setG(itN->second[1]); n->setB(itN->second[2]);
         n->setId(identifiantNoir[i]);
@@ -152,10 +144,8 @@ GLvoid affichage2() {
     for (int i = 3; i < 6; i++) {
         glPushMatrix();
         glTranslatef(0.5f * i, 0.0f, 0.2f);
-        vector<float> v(3, 0.0f);
         Note* n = new Note(keyNoir[i - 1]);
-        n->setCouleur(0.0);
-        vector<float> vec{ -4.0f + 0.5f * i ,1.0f };
+        n->setCouleur(0.0f);
         n->setMusic(itN->first);
         n->setR(itN->second[0]);
         n->setG(itN->second[1]);
@@ -170,10 +160,8 @@ GLvoid affichage2() {
     for (int i = 7; i < 9; i++) {
         glPushMatrix();
         glTranslatef(0.5f * i, 0.0f, 0.2f);
-        vector<float> v(3, 0.0f);
         Note* n = new Note(keyNoir[i - 2]);
-        n->setCouleur(0.0);
-        vector<float> vec{ -4.0f + 0.5f * i ,1.0f };
+        n->setCouleur(0.0f);
         n->setMusic(itN->first);
         n->setR(itN->second[0]);
         n->setG(itN->second[1]);
@@ -189,10 +177,8 @@ GLvoid affichage2() {
     for (int i = 10; i < 13; i++) {
         glPushMatrix();
         glTranslatef(0.5f * i, 0.0f, 0.2f);
-        vector<float> v(3, 0.0f);
         Note* n = new Note(keyNoir[i - 3]);
-        n->setCouleur(0.0);
-        vector<float> vec{ -4.0f + 0.5f * i ,1.0f };
+        n->setCouleur(0.0f);
         n->setMusic(itN->first);
         n->setR(itN->second[0]);
         n->setG(itN->second[1]);
@@ -204,8 +190,6 @@ GLvoid affichage2() {
         noir.push_back(n);
         glPopMatrix();
     }
-
-    glDisable(GL_DEPTH_TEST); 
     glFlush();
     glutSwapBuffers();
 
@@ -214,14 +198,10 @@ GLvoid affichage2() {
 // piano 2D
 GLvoid affichage2D() {
 
-    cameraMovement(upDownMove, straffeSpeed);
-    // cout << upDownMove << endl;
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
-    //animation
     glLoadIdentity();
-    gluLookAt(camPos.getVx(), camPos.getVy(), camPos.getVz(), 0, 0, 0, upWorld.getVx(), upWorld.getVy(), upWorld.getVz());
+    gluLookAt(camPos2D.getVx(), camPos2D.getVy(), camPos2D.getVz(), at2D.getVx(), at2D.getVy(), at2D.getVz(), upWorld.getVx(), upWorld.getVy(), upWorld.getVz());
     glMatrixMode(GL_MODELVIEW);
     glTranslatef(-4.0f, 0.0f, 0.0f);
 
@@ -236,8 +216,9 @@ GLvoid affichage2D() {
         n->setMusic(it->first);
         n->setR(it->second[0]);  n->setG(it->second[1]); n->setB(it->second[2]);
         n->setId(identifiantBlanc[i]);
-        n->drawNote(n->getCouleur());
+        n->drawNote(n->getCouleur(), isPressedBlanc[i]);
         it++;
+        glTranslatef(0.0f, 0.0f, 0.1);
         n->drawChar(n->getCouleur());
         blanc.push_back(n);
         glPopMatrix();
@@ -258,8 +239,9 @@ GLvoid affichage2D() {
         n->setMusic(itN->first);
         n->setR(itN->second[0]); n->setG(itN->second[1]); n->setB(itN->second[2]);
         n->setId(identifiantNoir[i]);
-        n->drawNote(n->getCouleur());
+        n->drawNote(n->getCouleur(), isPressedNoir[i]);
         ++itN;
+        glTranslatef(0.0f, 0.0f, 0.1);
         n->drawChar(n->getCouleur());
         noir.push_back(n);
         glPopMatrix();
@@ -277,8 +259,9 @@ GLvoid affichage2D() {
         n->setG(itN->second[1]);
         n->setB(itN->second[2]);
         n->setId(identifiantNoir[i - 1]);
-        n->drawNote(n->getCouleur());
+        n->drawNote(n->getCouleur(), isPressedNoir[i-1]);
         itN++;
+        glTranslatef(0.0f, 0.0f, 0.1);
         n->drawChar(n->getCouleur());
         noir.push_back(n);
         glPopMatrix();
@@ -295,8 +278,9 @@ GLvoid affichage2D() {
         n->setG(itN->second[1]);
         n->setB(itN->second[2]);
         n->setId(identifiantNoir[i - 2]);
-        n->drawNote(n->getCouleur());
+        n->drawNote(n->getCouleur(), isPressedNoir[i-2]);
         itN++;
+        glTranslatef(0.0f, 0.0f, 0.1);
         n->drawChar(n->getCouleur());
         noir.push_back(n);
         glPopMatrix();
@@ -314,8 +298,9 @@ GLvoid affichage2D() {
         n->setG(itN->second[1]);
         n->setB(itN->second[2]);
         n->setId(identifiantNoir[i - 3]);
-        n->drawNote(n->getCouleur());
+        n->drawNote(n->getCouleur(), isPressedNoir[i-3]);;
         itN++;
+        glTranslatef(0.0f, 0.0f, 0.1);
         n->drawChar(n->getCouleur());
         noir.push_back(n);
         glPopMatrix();
@@ -326,88 +311,8 @@ GLvoid affichage2D() {
     glutSwapBuffers();
 
 }
-//GLvoid affichage() {
-//    // Effacement du frame buffer + Z buffer
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//    // ModelView
-//    glMatrixMode(GL_MODELVIEW);
-//    glTranslatef(-4.0f, 0.0f, 0.0f);
-//    for (int i = 0; i < 14; i++) {
-//        glPushMatrix();
-//        glTranslatef(0.5f * i, 0.0f, 0.0f); 
-//        vector<float> v(3,1.0f); 
-//         Note *n = new Note(keyBlanc[i]);
-//        n->setCouleur(1.0);
-//        vector<float> vec{-4.0f+ 1.0f * i ,0.0f};
-//        n->setMusic(noteBlanches[i]);
-//        n->drawNote(n-> getCouleur());
-//        n->drawChar(n->getCouleur());
-//       
-//        blanc.push_back(n); 
-//        glPopMatrix(); 
-//    }
-//
-//    glPopMatrix();
-//      
-//    for (int i = 0; i < 2; i++) {
-//        glPushMatrix();
-//        glTranslatef(0.5f * i, 0.0f, 0.0f);
-//        vector<float> v(3, 0.0f);
-//        Note* n = new Note(keyNoir[i]);
-//        n->setCouleur(0.0);
-//        vector<float> vec{ -4.0f + 0.5f * i ,1.0f };
-//        n->setMusic(noteNoires[i]);
-//        n->drawNote(n->getCouleur());
-//        n->drawChar(n->getCouleur());
-//        noir.push_back(n);
-//        glPopMatrix();
-//    }
-//    for (int i = 3; i < 6; i++) {
-//        glPushMatrix();
-//        glTranslatef(0.5f * i, 0.0f, 0.0f);
-//        vector<float> v(3, 0.0f);
-//        Note* n = new Note(keyNoir[i-1]);
-//        n->setCouleur(0.0);
-//        vector<float> vec{ -4.0f + 0.5f * i ,1.0f };
-//        n->setEspace(vec, n->getCouleur());
-//        n->setMusic(noteNoires[i-1]);
-//        n->drawNote(n->getCouleur());
-//        n->drawChar(n->getCouleur());
-//        noir.push_back(n);
-//        glPopMatrix();
-//    }
-//    for (int i = 7; i < 9; i++) {
-//        glPushMatrix();
-//        glTranslatef(0.5f * i, 0.0f, 0.0f);
-//        vector<float> v(3, 0.0f);
-//        Note* n = new Note(keyNoir[i-2]);
-//        n->setCouleur(0.0);
-//        vector<float> vec{ -4.0f + 0.5f * i ,1.0f };
-//        n->setMusic(noteNoires[i-2]);
-//        n->drawNote(n->getCouleur());
-//        n->drawChar(n->getCouleur());
-//        noir.push_back(n);
-//        glPopMatrix();
-//    }
-//    for (int i = 10; i < 13; i++) {
-//        glPushMatrix();
-//        glTranslatef(0.5f * i, 0.0f, 0.0f);
-//        vector<float> v(3, 0.0f);
-//        Note* n = new Note(keyNoir[i-3]);
-//        n->setCouleur(0.0);
-//        vector<float> vec{ -4.0f + 0.5f * i ,1.0f };
-//        n->setMusic(noteNoires[i-3]);
-//        n->drawNote(n->getCouleur());
-//        n->drawChar(n->getCouleur());
-//        noir.push_back(n);
-//        glPopMatrix();
-//    }
-//
-//    
-//    glFlush();
-//    glutSwapBuffers();
-//}
 
+// fonction du clavier relaché
 GLvoid clavierUp(unsigned char touche, int x, int y) {
     //Blancs
     for (int i = 0; i < 14; i++) {
@@ -426,7 +331,7 @@ GLvoid clavierUp(unsigned char touche, int x, int y) {
     glutPostRedisplay();
 };
 
-// Definition de la fonction gerant les interruptions clavier
+//la fonction gerant les input clavier
 GLvoid clavier(unsigned char touche, int x, int y) { // selon input 
     // Blanc
     for (int i = 0; i < 14; i++) {
@@ -450,24 +355,11 @@ GLvoid clavier(unsigned char touche, int x, int y) { // selon input
             break;
         };
     };
-    switch (touche) {
-    case '+':
-        //activer le test du tampon de profondeur
-        glEnable(GL_DEPTH_TEST);
-        glutPostRedisplay();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        break;
-    case '-':
-        //desactiver le test du tampon de profondeur
-        glDisable(GL_DEPTH_TEST);
-        glutPostRedisplay();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        break;
-    }
+  
     glutPostRedisplay();
 }
 
-
+// fonction qui retourne le char de la note et sa couleur avec son id entré en paramètre
 map<char, int> findid(float f) {
     // liste de banc 
     for (int i = 0; i < blanc.size(); i++) {
@@ -504,13 +396,13 @@ float getPixelColor(GLint x, GLint y) {
     glReadBuffer(GL_FRONT);
     glReadPixels(x, windowH - y - 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &data);
     float pickedID = data[0] + data[1] * 10 + data[2] * 100;
-    cout << "le id est " << pickedID << endl;
     return pickedID;
 }
 float A;
 map<char, int> Dict{ {'a',1} };
 
-GLvoid souris3(int boutton, int etat, int x, int y)
+// gestion des clics de la souris
+GLvoid souris(int boutton, int etat, int x, int y)
 {
     if (boutton == GLUT_LEFT_BUTTON)
     {
@@ -536,12 +428,24 @@ GLvoid souris3(int boutton, int etat, int x, int y)
 
         }
     }
-
-
-
     glutPostRedisplay();
 }
 
+void mouseWheel(int button, int dir, int x, int y)
+{
+    if (dir > 0)
+    {
+        camPos.setVz(camPos.getVz() - 0.1);
+    }
+    else
+    {
+        camPos.setVz(camPos.getVz() + 0.1);
+    }
+    glutPostRedisplay();
+
+    return;
+}
+// fonction de gestion des flèches du clavier
 void catchKey(int key, int x, int y) {
     switch (key) {
     case GLUT_KEY_LEFT:
@@ -557,9 +461,9 @@ void catchKey(int key, int x, int y) {
         upDownMove = -0.01f;
         break;
     }
-   // cout << position << endl;
 }
 
+// fonction de gestion des flèches enfoncès du clavier 
 void catchKeyDown(int key, int x, int y) {
     switch (key) {
     case GLUT_KEY_RIGHT:
@@ -573,107 +477,74 @@ void catchKeyDown(int key, int x, int y) {
     }
 }
 
-
-// Callback de redimensionnement de la fenêtre
+// fonction de redimensionnement de la fenêtre
 GLvoid redimensionner(int w, int h) {
-    // Garde les valeurs
     windowW = w;
     windowH = h;
     // eviter une division par 0
     if (windowH == 0)
         windowH = 1;
     float ratio = (float)windowW / (float)windowH;
-
     glMatrixMode(GL_PROJECTION);
-
     glLoadIdentity();
     glViewport(0, 0, windowW, windowH);
     gluPerspective(focale, w * 1.0 / h, near1, far1);
-    // gluLookAt(0, 0, 5, 0, 0, 0, 0, 1, 0);
     glMatrixMode(GL_MODELVIEW);
 }
 
-void mouseWheel(int button, int dir, int x, int y)
-{
-    if (dir > 0)
-    {
-        camPos.setVz(camPos.getVz() - 0.1) ;
-    }
-    else
-    {
-        //distance1 += 0.1f;
-        camPos.setVz(camPos.getVz() + 0.1);
-      
-    }
-    glutPostRedisplay();
 
-    return;
-}
 
 
 void main(int argc, char* argv[])
 {
+
+    //choix du type du piano
+    cout << "Veuillez choisir le mode d'affichage ('1' pour l'affichage 2D, '2' pour l'affichage 3D)" << endl;
+    int a;
+    cin >> a;
+    cout << endl;
+    cout << endl;
+    // si les valeurs sont différents de 1 ou 2 on affiche le piano 3D
+    if (a != 1 && a != 2) {
+        a = 2;
+   }
+
     // Initialisation de GLUT
     glutInit(&argc, argv);
-    // Choix du mode d'affichage (ici RVB)
+    // Choix du mode d'affichage 
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_SINGLE);
      // Position initiale de la fenetre GLUT
     glutInitWindowPosition(200, 200);
     // Taille initiale de la fenetre GLUT
     glutInitWindowSize(windowW, windowH);
     // Creation de la fenetre GLUT
-    glutCreateWindow("PIANO3D");
-    // Définition de la couleur d'effacement du framebuffer
+    glutCreateWindow("Piano");
+    // Définition de la couleur d'effacement du framebuffer (rouge bordeaux)
     glClearColor(0.4f, 0.0f, 0.0f, 0.0f);
     // Définition des fonctions de callbacks
     glutKeyboardFunc(clavier);
     glutKeyboardUpFunc(clavierUp);
-    glutMouseFunc(souris3);
+    glutMouseFunc(souris);
     glutSpecialFunc(catchKey);
     glutSpecialUpFunc(catchKeyDown);
     glutMouseWheelFunc(mouseWheel);
     glutReshapeFunc(redimensionner);
-    camPos = Vector3D(0, -1, 6);
-    // on initialise les vecteurs 'view'
-    forwardView = Vector3D(0, 1, 0);
+    camPos = Vector3D(-0.5, -1, 4);
+    // on initialise les vecteurs de la camera
     upWorld = Vector3D(0, 1, 0);
-    rightView = Vector3D(1, 0, 0);
-    // Pour le FPS mode
     forwardMove = Vector3D(0, 0, 1);
-    at = Vector3D(0,1,0);
+    at = Vector3D(-0.5,1,0);
     rightMove = Vector3D(1, 0, 0);
-    // on initialise la cible a partir de la camera et du vecteur vision
     targetPos = Vector3D(0,3,0);
+    if (a == 1) {
+        glutDisplayFunc(affichage2D);
+        glutIdleFunc(affichage2D);
+    }
+    else if (a ==2) {
+        glutDisplayFunc(affichage3D);
+        glutIdleFunc(affichage3D);
+    }
 
-    glutDisplayFunc(affichage2);
-    glutIdleFunc(affichage2);
-    glClearColor(0.4f, 0.0f, 0.0f, 0.0f);
-     
-
-    // pour voir un piano 2D 
-   
-    glClearColor(0.4f, 0.0f, 0.0f, 0.0f);
-    glutKeyboardFunc(clavier);
-    glutKeyboardUpFunc(clavierUp);
-    glutMouseFunc(souris3);
-    glutSpecialFunc(catchKey);
-    glutSpecialUpFunc(catchKeyDown);
-    glutMouseWheelFunc(mouseWheel);
-    glutReshapeFunc(redimensionner);
-    camPos = Vector3D(0, -1, 3);
-    // on initialise les vecteurs 'view'
-    forwardView = Vector3D(0, 0, 0);
-    upWorld = Vector3D(0, 1, 0);
-    rightView = Vector3D(1, 0, 0);
-    // Pour le FPS mode
-    forwardMove = Vector3D(0, 0, -1);
-    at = Vector3D(0, 1, 0);
-    rightMove = Vector3D(1, 0, 0);
-    // on initialise la cible a partir de la camera et du vecteur vision
-    targetPos = camPos + forwardView;
-
-   // glutDisplayFunc(affichage2D);
-    ////glutIdleFunc(affichage2D);
     // Lancement de la boucle infinie GLUT
     glutMainLoop();
     
