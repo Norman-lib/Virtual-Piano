@@ -66,6 +66,8 @@ vector<float> identifiantNoir{ -14208,-11678,11092,-13955,-13958,-11708,10792,13
 //les vecteurs de pointeurs notes
 vector<Note*> blanc;
 vector<Note*> noir;
+vector<Note*> Happybirthday;
+vector<Note*> caribean;
 
 // vecteurs des keys du clavier 
 const char* keyBlanc = "qsdfghjklm4561";
@@ -114,7 +116,7 @@ GLvoid affichage3D() {
         n->setMusic(it->first);
         n->setR(it->second[0]);  n->setG(it->second[1]); n->setB(it->second[2]);
         n->setId(identifiantBlanc[i]);
-        n->drawNote3(n->getCouleur(), isPressedBlanc[i]);
+        n->drawNote3(n->getCouleur(), n->getIsPressed());
         it++;
         n->drawChar(n->getCouleur());
         blanc.push_back(n);
@@ -190,6 +192,68 @@ GLvoid affichage3D() {
         noir.push_back(n);
         glPopMatrix();
     }
+
+    Happybirthday.push_back(blanc[0]); 
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[1]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[3]);
+    Happybirthday.push_back(blanc[2]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[1]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[4]);
+    Happybirthday.push_back(blanc[3]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[7]);
+    Happybirthday.push_back(blanc[5]);
+    Happybirthday.push_back(blanc[4]);
+    Happybirthday.push_back(blanc[3]);
+    Happybirthday.push_back(blanc[2]);
+    Happybirthday.push_back(noir[4]);
+    Happybirthday.push_back(noir[4]);
+    Happybirthday.push_back(blanc[5]);
+    Happybirthday.push_back(blanc[3]);
+    Happybirthday.push_back(blanc[4]);
+    Happybirthday.push_back(blanc[3]);
+
+    for (int i = 0; i < 10; i++) {
+        caribean.push_back(blanc[5]); 
+    }
+    caribean.push_back(noir[2]);
+    caribean.push_back(blanc[5]);
+    caribean.push_back(blanc[6]);
+    caribean.push_back(blanc[6]);
+    caribean.push_back(blanc[6]);
+    caribean.push_back(noir[5]);
+    caribean.push_back(blanc[8]);
+    caribean.push_back(blanc[8]);
+    caribean.push_back(blanc[8]);
+    caribean.push_back(blanc[9]);
+    caribean.push_back(noir[5]);
+    caribean.push_back(noir[5]);
+    caribean.push_back(blanc[6]);
+    caribean.push_back(blanc[5]);
+    caribean.push_back(blanc[6]);
+    caribean.push_back(noir[2]);
+    caribean.push_back(noir[2]);
+    caribean.push_back(blanc[5]);
+    caribean.push_back(blanc[6]);
+    caribean.push_back(blanc[6]);
+    caribean.push_back(blanc[6]);
+    caribean.push_back(noir[5]);
+    caribean.push_back(blanc[8]);
+    caribean.push_back(blanc[8]);
+    caribean.push_back(blanc[8]);
+    caribean.push_back(blanc[9]);
+    caribean.push_back(noir[5]);
+    caribean.push_back(noir[5]);
+    caribean.push_back(blanc[6]);
+    caribean.push_back(blanc[5]);
+    caribean.push_back(blanc[6]);
+    caribean.push_back(noir[2]);
     glFlush();
     glutSwapBuffers();
 
@@ -216,7 +280,7 @@ GLvoid affichage2D() {
         n->setMusic(it->first);
         n->setR(it->second[0]);  n->setG(it->second[1]); n->setB(it->second[2]);
         n->setId(identifiantBlanc[i]);
-        n->drawNote(n->getCouleur(), isPressedBlanc[i]);
+        n->drawNote(n->getCouleur(), n->getIsPressed());
         it++;
         glTranslatef(0.0f, 0.0f, 0.1);
         n->drawChar(n->getCouleur());
@@ -307,6 +371,32 @@ GLvoid affichage2D() {
     }
 
 
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[1]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[3]);
+    Happybirthday.push_back(blanc[2]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[1]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[4]);
+    Happybirthday.push_back(blanc[3]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[0]);
+    Happybirthday.push_back(blanc[7]);
+    Happybirthday.push_back(blanc[5]);
+    Happybirthday.push_back(blanc[4]);
+    Happybirthday.push_back(blanc[3]);
+    Happybirthday.push_back(blanc[2]);
+    Happybirthday.push_back(noir[4]);
+    Happybirthday.push_back(noir[4]);
+    Happybirthday.push_back(blanc[5]);
+    Happybirthday.push_back(blanc[3]);
+    Happybirthday.push_back(blanc[4]);
+    Happybirthday.push_back(blanc[3]);
+
     glFlush();
     glutSwapBuffers();
 
@@ -317,7 +407,7 @@ GLvoid clavierUp(unsigned char touche, int x, int y) {
     //Blancs
     for (int i = 0; i < 14; i++) {
         if (touche == keyBlanc[i]) {
-            isPressedBlanc[i] = false;
+            blanc[i]->setIsPressed(false) ;
             break;
         };
     };
@@ -336,10 +426,10 @@ GLvoid clavier(unsigned char touche, int x, int y) { // selon input
     // Blanc
     for (int i = 0; i < 14; i++) {
         if (touche == keyBlanc[i]) {
-            if (!isPressedBlanc[i]) {
+            if (blanc[i]->getIsPressed() == false ) {
                 blanc[i]->setMusicOn();
                 blanc[i]->playMusic();
-                isPressedBlanc[i] = true;
+                blanc[i]->setIsPressed(true);
             };
             break;
         };
@@ -355,6 +445,26 @@ GLvoid clavier(unsigned char touche, int x, int y) { // selon input
             break;
         };
     };
+    if (touche == '9') {
+        for (int i = 0; i < Happybirthday.size(); i++) {
+            Happybirthday[i]->setMusicOn();
+            Happybirthday[i]->playMusic();
+            Sleep(500); 
+           
+          
+            
+        }
+    }
+    if (touche == '2') {
+        for (int i = 0; i < caribean.size(); i++) {
+
+            caribean[i]->setMusicOn();
+            caribean[i]->playMusic();
+            Sleep(250);
+            //isPressedBlanc[i] = true;
+
+        }
+    }
   
     glutPostRedisplay();
 }
@@ -367,7 +477,8 @@ map<char, int> findid(float f) {
         {
             blanc[i]->setMusicOn();
             blanc[i]->playMusic();
-            isPressedBlanc[i] = true;
+            blanc[i]->setIsPressed(true);
+         
             glutPostRedisplay();
             return (map<char, int>{ {'b', i}});
         }
@@ -418,6 +529,7 @@ GLvoid souris(int boutton, int etat, int x, int y)
             boutonClick = true;
             break;
         case GLUT_UP:
+            
             if (Dict.begin()->first == 'b') { isPressedBlanc[Dict.begin()->second] = false; }
             else if (Dict.begin()->first == 'n') { isPressedNoir[Dict.begin()->second] = false; }
            
@@ -536,6 +648,7 @@ void main(int argc, char* argv[])
     at = Vector3D(-0.5,1,0);
     rightMove = Vector3D(1, 0, 0);
     targetPos = Vector3D(0,3,0);
+    
     if (a == 1) {
         glutDisplayFunc(affichage2D);
         glutIdleFunc(affichage2D);
