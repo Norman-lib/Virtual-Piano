@@ -45,12 +45,10 @@ public:
 	void setG(float green) { G = green; }
 	void setB(float bleu) { B = bleu; }
 	void setId(float ident) { id = ident; };
-	void setIsPressed(bool x) { isPressed = x; };
 	//getters
 	float getCouleur();
 	float getId() { return id; };
 	char getChar();
-	bool getIsPressed() { return isPressed; };
 	//methodes
 	GLvoid drawNote(float , bool);
 	GLvoid drawNote3(float , bool);

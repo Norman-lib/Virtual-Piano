@@ -71,9 +71,9 @@ vector<Note*> caribean;
 
 // vecteurs des keys du clavier 
 const char* keyBlanc = "qsdfghjklm4561";
-//const char* keyNoir = "azertyuiop";
-
 const char* keyNoir = "zetyuop$*7";
+string keyBlancStr = "qsdfghjklm4561";
+string keyNoirStr = "zetyuop$*7";
 
 //un vecteur possedant l'état enfoncé ou relaché des bouttons
 vector<bool> isPressedBlanc(14, false);
@@ -95,6 +95,14 @@ void cameraMovement(float dM, float dS) {
 // Definition de la fonction d'affichage
 // piano 3D
 
+
+bool testHB = false; 
+int interateurHB = 0; 
+int oldIndex = -5;
+int oldIndex2 = -5;
+string HB = "qqsqfdqqsgfqqkhgfuuhfgf"; 
+string Carr = "qqsqfdqqsgfqqkhgfuuhfgf";
+
 GLvoid affichage3D() {
 
     cameraMovement(upDownMove, straffeSpeed);
@@ -107,6 +115,47 @@ GLvoid affichage3D() {
     glMatrixMode(GL_MODELVIEW);
     glTranslatef(-4.0f, 0.0f, 0.0f);
     // on remplit blanc et noir en les dessinant 
+
+    if (testHB && interateurHB < HB.size()) {
+        if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
+        if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
+        int index = keyBlancStr.find(HB[interateurHB]);
+        int index2 = keyNoirStr.find(HB[interateurHB]);
+        Sleep(300);
+        cout << index << "," << index2 << endl;
+        if (index == -1) {
+            noir[index2]->setMusicOn();       
+            isPressedNoir[index2] = true;
+            noir[index2]->playMusic();
+            Sleep(350);
+        }
+        else if (index2 == -1)
+        {
+            blanc[index]->setMusicOn();  
+            isPressedBlanc[index] = true;
+            blanc[index]->playMusic();
+            Sleep(350);
+         }
+      
+       
+        if (interateurHB == HB.size() -1  ) { 
+            testHB = false; 
+            isPressedNoir.assign(isPressedNoir.size(), false); 
+            isPressedBlanc.assign(isPressedBlanc.size(), false);
+        }
+        else {
+            interateurHB++;
+        }
+         oldIndex = index;
+         oldIndex2 = index2;
+
+
+
+
+    }
+
+
+
     auto it = noteBlanches.begin();
     for (int i = 0; i < 14; i++) {
         glPushMatrix();
@@ -116,7 +165,7 @@ GLvoid affichage3D() {
         n->setMusic(it->first);
         n->setR(it->second[0]);  n->setG(it->second[1]); n->setB(it->second[2]);
         n->setId(identifiantBlanc[i]);
-        n->drawNote3(n->getCouleur(), n->getIsPressed());
+        n->drawNote3(n->getCouleur(),isPressedBlanc[i]);
         it++;
         n->drawChar(n->getCouleur());
         blanc.push_back(n);
@@ -192,8 +241,8 @@ GLvoid affichage3D() {
         noir.push_back(n);
         glPopMatrix();
     }
-
-    Happybirthday.push_back(blanc[0]); 
+    
+   /* Happybirthday.push_back(blanc[0]); 
     Happybirthday.push_back(blanc[0]);
     Happybirthday.push_back(blanc[1]);
     Happybirthday.push_back(blanc[0]);
@@ -217,7 +266,9 @@ GLvoid affichage3D() {
     Happybirthday.push_back(blanc[5]);
     Happybirthday.push_back(blanc[3]);
     Happybirthday.push_back(blanc[4]);
-    Happybirthday.push_back(blanc[3]);
+    Happybirthday.push_back(blanc[3]);*/
+   
+   
 
     for (int i = 0; i < 10; i++) {
         caribean.push_back(blanc[5]); 
@@ -280,7 +331,7 @@ GLvoid affichage2D() {
         n->setMusic(it->first);
         n->setR(it->second[0]);  n->setG(it->second[1]); n->setB(it->second[2]);
         n->setId(identifiantBlanc[i]);
-        n->drawNote(n->getCouleur(), n->getIsPressed());
+        n->drawNote(n->getCouleur(),isPressedBlanc[i]);
         it++;
         glTranslatef(0.0f, 0.0f, 0.1);
         n->drawChar(n->getCouleur());
@@ -407,7 +458,7 @@ GLvoid clavierUp(unsigned char touche, int x, int y) {
     //Blancs
     for (int i = 0; i < 14; i++) {
         if (touche == keyBlanc[i]) {
-            blanc[i]->setIsPressed(false) ;
+            isPressedBlanc[i] = false;
             break;
         };
     };
@@ -426,10 +477,10 @@ GLvoid clavier(unsigned char touche, int x, int y) { // selon input
     // Blanc
     for (int i = 0; i < 14; i++) {
         if (touche == keyBlanc[i]) {
-            if (blanc[i]->getIsPressed() == false ) {
+            if (!isPressedBlanc[i]) {
                 blanc[i]->setMusicOn();
                 blanc[i]->playMusic();
-                blanc[i]->setIsPressed(true);
+                isPressedBlanc[i] = true;
             };
             break;
         };
@@ -446,14 +497,10 @@ GLvoid clavier(unsigned char touche, int x, int y) { // selon input
         };
     };
     if (touche == '9') {
-        for (int i = 0; i < Happybirthday.size(); i++) {
-            Happybirthday[i]->setMusicOn();
-            Happybirthday[i]->playMusic();
-            Sleep(500); 
-           
-          
-            
-        }
+            testHB = true; 
+    }
+    else {
+        testHB = false; 
     }
     if (touche == '2') {
         for (int i = 0; i < caribean.size(); i++) {
@@ -477,8 +524,8 @@ map<char, int> findid(float f) {
         {
             blanc[i]->setMusicOn();
             blanc[i]->playMusic();
-            blanc[i]->setIsPressed(true);
-         
+            
+            isPressedBlanc[i] = true;
             glutPostRedisplay();
             return (map<char, int>{ {'b', i}});
         }
