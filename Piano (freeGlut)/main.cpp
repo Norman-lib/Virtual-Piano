@@ -66,8 +66,6 @@ vector<float> identifiantNoir{ -14208,-11678,11092,-13955,-13958,-11708,10792,13
 //les vecteurs de pointeurs notes
 vector<Note*> blanc;
 vector<Note*> noir;
-vector<Note*> Happybirthday;
-vector<Note*> caribean;
 
 // vecteurs des keys du clavier 
 const char* keyBlanc = "qsdfghjklm4561";
@@ -78,7 +76,6 @@ string keyNoirStr = "zetyuop$*7";
 //un vecteur possedant l'état enfoncé ou relaché des bouttons
 vector<bool> isPressedBlanc(14, false);
 vector<bool> isPressedNoir(10, false);
-
 
 //fonction de mouvement de la camera
 
@@ -92,17 +89,17 @@ void cameraMovement(float dM, float dS) {
         }
 }
 
-// Definition de la fonction d'affichage
-// piano 3D
-
-
 bool testHB = false; 
-int interateurHB = 0; 
+bool testCP = false;
+int iterateurHB = 0; 
+int iterateurCP = 0;
 int oldIndex = -5;
 int oldIndex2 = -5;
-string HB = "qqsqfdqqsgfqqkhgfuuhfgf"; 
-string Carr = "qqsqfdqqsgfqqkhgfuuhfgf";
-
+string HB = "qqsqfdqqsqgfqqkhgfduuhfgf"; 
+//string Carr = "hhhhhhhthjjjolllmoojhjt";
+string Carr = "hklllm4445mmlklhklllm445mmlklh";
+// Definition de la fonction d'affichage
+// piano 3D
 GLvoid affichage3D() {
 
     cameraMovement(upDownMove, straffeSpeed);
@@ -114,15 +111,14 @@ GLvoid affichage3D() {
     gluLookAt(camPos.getVx(), camPos.getVy(), camPos.getVz() , at.getVx(), at.getVy(), at.getVz(), upWorld.getVx(), upWorld.getVy(), upWorld.getVz());
     glMatrixMode(GL_MODELVIEW);
     glTranslatef(-4.0f, 0.0f, 0.0f);
-    // on remplit blanc et noir en les dessinant 
-
-    if (testHB && interateurHB < HB.size()) {
+  
+    // HappyBirthday
+    if (testHB && iterateurHB < HB.size()) {
         if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
         if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
-        int index = keyBlancStr.find(HB[interateurHB]);
-        int index2 = keyNoirStr.find(HB[interateurHB]);
+        int index = keyBlancStr.find(HB[iterateurHB]);
+        int index2 = keyNoirStr.find(HB[iterateurHB]);
         Sleep(300);
-        cout << index << "," << index2 << endl;
         if (index == -1) {
             noir[index2]->setMusicOn();       
             isPressedNoir[index2] = true;
@@ -138,24 +134,55 @@ GLvoid affichage3D() {
          }
       
        
-        if (interateurHB == HB.size() -1  ) { 
+       if (iterateurHB == HB.size() -1  ) { 
             testHB = false; 
+            oldIndex = 0; oldIndex2 = 0; iterateurHB = 0; 
             isPressedNoir.assign(isPressedNoir.size(), false); 
             isPressedBlanc.assign(isPressedBlanc.size(), false);
         }
-        else {
-            interateurHB++;
+      else {
+            iterateurHB++;
         }
          oldIndex = index;
          oldIndex2 = index2;
+    }
+
+    //Pirates des caraibes
+    if (testCP && iterateurCP < Carr.size()) {
+        if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
+        if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
+        int index = keyBlancStr.find(Carr[iterateurCP]);
+        int index2 = keyNoirStr.find(Carr[iterateurCP]);
+        Sleep(300);
+        if (index == -1) {
+            noir[index2]->setMusicOn();
+            isPressedNoir[index2] = true;
+            noir[index2]->playMusic();
+            Sleep(300);
+        }
+        else if (index2 == -1)
+        {
+            blanc[index]->setMusicOn();
+            isPressedBlanc[index] = true;
+            blanc[index]->playMusic();
+            Sleep(300);
+        }
 
 
-
+        if (iterateurCP == Carr.size() - 1) {
+            testCP = false; oldIndex = 0; oldIndex2 = 0; iterateurCP = 0;
+            isPressedNoir.assign(isPressedNoir.size(), false);
+            isPressedBlanc.assign(isPressedBlanc.size(), false);
+        }
+        else {
+            iterateurCP++;
+        }
+        oldIndex = index;
+        oldIndex2 = index2;
 
     }
 
-
-
+  // on remplit blanc et noir en les dessinant 
     auto it = noteBlanches.begin();
     for (int i = 0; i < 14; i++) {
         glPushMatrix();
@@ -163,19 +190,16 @@ GLvoid affichage3D() {
         Note* n = new Note(keyBlanc[i]);
         n->setCouleur(1.0f);
         n->setMusic(it->first);
-        n->setR(it->second[0]);  n->setG(it->second[1]); n->setB(it->second[2]);
-        n->setId(identifiantBlanc[i]);
+        n->setR(it->second[0]);  n->setG(it->second[1]); n->setB(it->second[2]); n->setId(identifiantBlanc[i]);
         n->drawNote3(n->getCouleur(),isPressedBlanc[i]);
         it++;
         n->drawChar(n->getCouleur());
         blanc.push_back(n);
         glPopMatrix();
     }
-
     glPopMatrix();
 
     auto itN = noteNoires.begin();
-
     // les noires 
     for (int i = 0; i < 2; i++) {
         glPushMatrix();
@@ -191,7 +215,6 @@ GLvoid affichage3D() {
         noir.push_back(n);
         glPopMatrix();
     }
-
     for (int i = 3; i < 6; i++) {
         glPushMatrix();
         glTranslatef(0.5f * i, 0.0f, 0.2f);
@@ -224,7 +247,6 @@ GLvoid affichage3D() {
         noir.push_back(n);
         glPopMatrix();
     }
-
     for (int i = 10; i < 13; i++) {
         glPushMatrix();
         glTranslatef(0.5f * i, 0.0f, 0.2f);
@@ -241,70 +263,6 @@ GLvoid affichage3D() {
         noir.push_back(n);
         glPopMatrix();
     }
-    
-   /* Happybirthday.push_back(blanc[0]); 
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[1]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[3]);
-    Happybirthday.push_back(blanc[2]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[1]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[4]);
-    Happybirthday.push_back(blanc[3]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[7]);
-    Happybirthday.push_back(blanc[5]);
-    Happybirthday.push_back(blanc[4]);
-    Happybirthday.push_back(blanc[3]);
-    Happybirthday.push_back(blanc[2]);
-    Happybirthday.push_back(noir[4]);
-    Happybirthday.push_back(noir[4]);
-    Happybirthday.push_back(blanc[5]);
-    Happybirthday.push_back(blanc[3]);
-    Happybirthday.push_back(blanc[4]);
-    Happybirthday.push_back(blanc[3]);*/
-   
-   
-
-    for (int i = 0; i < 10; i++) {
-        caribean.push_back(blanc[5]); 
-    }
-    caribean.push_back(noir[2]);
-    caribean.push_back(blanc[5]);
-    caribean.push_back(blanc[6]);
-    caribean.push_back(blanc[6]);
-    caribean.push_back(blanc[6]);
-    caribean.push_back(noir[5]);
-    caribean.push_back(blanc[8]);
-    caribean.push_back(blanc[8]);
-    caribean.push_back(blanc[8]);
-    caribean.push_back(blanc[9]);
-    caribean.push_back(noir[5]);
-    caribean.push_back(noir[5]);
-    caribean.push_back(blanc[6]);
-    caribean.push_back(blanc[5]);
-    caribean.push_back(blanc[6]);
-    caribean.push_back(noir[2]);
-    caribean.push_back(noir[2]);
-    caribean.push_back(blanc[5]);
-    caribean.push_back(blanc[6]);
-    caribean.push_back(blanc[6]);
-    caribean.push_back(blanc[6]);
-    caribean.push_back(noir[5]);
-    caribean.push_back(blanc[8]);
-    caribean.push_back(blanc[8]);
-    caribean.push_back(blanc[8]);
-    caribean.push_back(blanc[9]);
-    caribean.push_back(noir[5]);
-    caribean.push_back(noir[5]);
-    caribean.push_back(blanc[6]);
-    caribean.push_back(blanc[5]);
-    caribean.push_back(blanc[6]);
-    caribean.push_back(noir[2]);
     glFlush();
     glutSwapBuffers();
 
@@ -312,13 +270,81 @@ GLvoid affichage3D() {
 
 // piano 2D
 GLvoid affichage2D() {
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glLoadIdentity();
     gluLookAt(camPos2D.getVx(), camPos2D.getVy(), camPos2D.getVz(), at2D.getVx(), at2D.getVy(), at2D.getVz(), upWorld.getVx(), upWorld.getVy(), upWorld.getVz());
     glMatrixMode(GL_MODELVIEW);
     glTranslatef(-4.0f, 0.0f, 0.0f);
+    // HappyBirthday
+    if (testHB && iterateurHB < HB.size()) {
+        if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
+        if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
+        int index = keyBlancStr.find(HB[iterateurHB]);
+        int index2 = keyNoirStr.find(HB[iterateurHB]);
+        Sleep(300);
+        if (index == -1) {
+            noir[index2]->setMusicOn();
+            isPressedNoir[index2] = true;
+            noir[index2]->playMusic();
+            Sleep(350);
+        }
+        else if (index2 == -1)
+        {
+            blanc[index]->setMusicOn();
+            isPressedBlanc[index] = true;
+            blanc[index]->playMusic();
+            Sleep(350);
+        }
+
+
+        if (iterateurHB == HB.size() - 1) {
+            testHB = false;
+            oldIndex = 0; oldIndex2 = 0; iterateurHB = 0;
+            isPressedNoir.assign(isPressedNoir.size(), false);
+            isPressedBlanc.assign(isPressedBlanc.size(), false);
+        }
+        else {
+            iterateurHB++;
+        }
+        oldIndex = index;
+        oldIndex2 = index2;
+    }
+
+    //Pirates des caraibes
+    if (testCP && iterateurCP < Carr.size()) {
+        if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
+        if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
+        int index = keyBlancStr.find(Carr[iterateurCP]);
+        int index2 = keyNoirStr.find(Carr[iterateurCP]);
+        Sleep(300);
+        if (index == -1) {
+            noir[index2]->setMusicOn();
+            isPressedNoir[index2] = true;
+            noir[index2]->playMusic();
+            Sleep(250);
+        }
+        else if (index2 == -1)
+        {
+            blanc[index]->setMusicOn();
+            isPressedBlanc[index] = true;
+            blanc[index]->playMusic();
+            Sleep(250);
+        }
+
+
+        if (iterateurCP == Carr.size() - 1) {
+            testCP = false; oldIndex = 0; oldIndex2 = 0; iterateurCP = 0;
+            isPressedNoir.assign(isPressedNoir.size(), false);
+            isPressedBlanc.assign(isPressedBlanc.size(), false);
+        }
+        else {
+            iterateurCP++;
+        }
+        oldIndex = index;
+        oldIndex2 = index2;
+
+    }
 
     auto it = noteBlanches.begin();
     for (int i = 0; i < 14; i++) {
@@ -342,7 +368,6 @@ GLvoid affichage2D() {
     glPopMatrix();
 
     auto itN = noteNoires.begin();
-
     // les noires 
     for (int i = 0; i < 2; i++) {
         glPushMatrix();
@@ -361,7 +386,6 @@ GLvoid affichage2D() {
         noir.push_back(n);
         glPopMatrix();
     }
-
     for (int i = 3; i < 6; i++) {
         glPushMatrix();
         glTranslatef(0.5f * i, 0.0f, 0.01f);
@@ -400,7 +424,6 @@ GLvoid affichage2D() {
         noir.push_back(n);
         glPopMatrix();
     }
-
     for (int i = 10; i < 13; i++) {
         glPushMatrix();
         glTranslatef(0.5f * i, 0.0f, 0.01f);
@@ -420,33 +443,6 @@ GLvoid affichage2D() {
         noir.push_back(n);
         glPopMatrix();
     }
-
-
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[1]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[3]);
-    Happybirthday.push_back(blanc[2]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[1]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[4]);
-    Happybirthday.push_back(blanc[3]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[0]);
-    Happybirthday.push_back(blanc[7]);
-    Happybirthday.push_back(blanc[5]);
-    Happybirthday.push_back(blanc[4]);
-    Happybirthday.push_back(blanc[3]);
-    Happybirthday.push_back(blanc[2]);
-    Happybirthday.push_back(noir[4]);
-    Happybirthday.push_back(noir[4]);
-    Happybirthday.push_back(blanc[5]);
-    Happybirthday.push_back(blanc[3]);
-    Happybirthday.push_back(blanc[4]);
-    Happybirthday.push_back(blanc[3]);
 
     glFlush();
     glutSwapBuffers();
@@ -498,21 +494,19 @@ GLvoid clavier(unsigned char touche, int x, int y) { // selon input
     };
     if (touche == '9') {
             testHB = true; 
+            testCP = false;
     }
-    else {
-        testHB = false; 
+    else if (touche == '2') {
+            testCP = true;
+            testHB = false; 
     }
-    if (touche == '2') {
-        for (int i = 0; i < caribean.size(); i++) {
-
-            caribean[i]->setMusicOn();
-            caribean[i]->playMusic();
-            Sleep(250);
-            //isPressedBlanc[i] = true;
-
-        }
+    if (touche == '0') {
+        testHB = false; testCP = false;  isPressedNoir.assign(isPressedNoir.size(), false);
+        isPressedBlanc.assign(isPressedBlanc.size(), false); oldIndex = 0; oldIndex2 = 0;
+        iterateurHB = 0; iterateurCP = 0;
     }
-  
+    
+   
     glutPostRedisplay();
 }
 
@@ -545,7 +539,6 @@ map<char, int> findid(float f) {
 
 }
 
-
 float getPixelColor(GLint x, GLint y) {
     glFlush();
     glFinish();
@@ -558,7 +551,6 @@ float getPixelColor(GLint x, GLint y) {
 }
 float A;
 map<char, int> Dict{ {'a',1} };
-
 // gestion des clics de la souris
 GLvoid souris(int boutton, int etat, int x, int y)
 {
@@ -604,6 +596,7 @@ void mouseWheel(int button, int dir, int x, int y)
 
     return;
 }
+
 // fonction de gestion des flèches du clavier
 void catchKey(int key, int x, int y) {
     switch (key) {
@@ -652,13 +645,10 @@ GLvoid redimensionner(int w, int h) {
 }
 
 
-
-
 void main(int argc, char* argv[])
 {
-
     //choix du type du piano
-    cout << "Veuillez choisir le mode d'affichage ('1' pour l'affichage 2D, '2' pour l'affichage 3D)" << endl;
+    cout << "Veuillez choisir le mode d'affichage ('1' pour l'affichage 2D, '2' pour l'affichage 3D)" << endl<<endl<<endl;
     int a;
     cin >> a;
     cout << endl;
@@ -667,7 +657,10 @@ void main(int argc, char* argv[])
     if (a != 1 && a != 2) {
         a = 2;
    }
-
+    cout << "Apres avoir choisir le type, appuyez sur :" << endl ;
+    cout << "2 pour jouer le debut des pirates des caraibes" << endl;
+    cout << "9 pour jouer le debut de joyeux anniversaire" << endl;
+    cout << "0 pour arreter la musique" << endl;
     // Initialisation de GLUT
     glutInit(&argc, argv);
     // Choix du mode d'affichage 

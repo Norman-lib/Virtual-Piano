@@ -32,8 +32,6 @@ private:
 	char c; // le caractere de la note
 	string music;
 	bool MusicOn;
-	bool isPressed = false; 
-	// file music 
 public:
 	//constrcuteurs 
 	Note(char);
