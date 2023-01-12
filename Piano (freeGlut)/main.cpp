@@ -91,21 +91,33 @@ void cameraMovement(float dM, float dS) {
 
 bool testHB = false; 
 bool testCP = false;
+bool testCustom = false;
 int iterateurHB = 0; 
 int iterateurCP = 0;
+int iterateurCustom = 0;
 int oldIndex = -5;
 int oldIndex2 = -5;
 string HB = "qqsqfdqqsqgfqqkhgfduuhfgf-"; 
-//string Carr = "hhhhhhhthjjjolllmoojhjt";
 string Carr = "hklllm4445mmlklhklllm445mmlklhhklll4555677656llm4456ll4mm4l4m-";
+string CustomSheet = "";
 
-void playSong(bool test, int iter , string sheet) {
+void playSong(bool test , string sheet, int number) {
+    int iter;
+    if (number == 1) {
+        iter = iterateurHB;
+    }
+    else if (number == 2) {
+        iter = iterateurCP;
+    }
+    else if (number == 3) {
+        iter = iterateurCustom;
+    }
     if (test && iter < sheet.size()) {
-        if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
-        if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
         int index = keyBlancStr.find(sheet[iter]);
         int index2 = keyNoirStr.find(sheet[iter]);
-        Sleep(300);
+        if (oldIndex == -1 && oldIndex2 != -1) { isPressedNoir[oldIndex2] = false; }
+        if (oldIndex2 == -1 && oldIndex !=-1) { isPressedBlanc[oldIndex] = false; }
+        Sleep(100);
         if (index == -1 && index2 == -1) {
 
         }
@@ -129,10 +141,31 @@ void playSong(bool test, int iter , string sheet) {
             oldIndex = 0; oldIndex2 = 0; iter = 0;
             isPressedNoir.assign(isPressedNoir.size(), false);
             isPressedBlanc.assign(isPressedBlanc.size(), false);
+            if (number == 1) {
+                iterateurHB = 0;
+                testHB = false;
+            }
+            else if (number == 2)
+            {
+                iterateurCP = 0;
+                testCP = false;
+            }
+            else if (number == 3) {
+                iterateurCustom = 0;
+                testCustom = false;
+            }
         }
         else {
-            iter++;
-            cout << iter << endl;
+            if (number == 1) {
+               iterateurHB++;
+            }
+            else if (number == 2) 
+            {
+                iterateurCP++;
+            }
+            else if (number == 3) {
+                iterateurCustom++;
+            }
         }
         oldIndex = index;
         oldIndex2 = index2;
@@ -153,80 +186,14 @@ GLvoid affichage3D() {
     glMatrixMode(GL_MODELVIEW);
     glTranslatef(-4.0f, 0.0f, 0.0f);
   
-    // HappyBirthday
-   /* if (testHB && iterateurHB < HB.size()) {
-        if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
-        if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
-        int index = keyBlancStr.find(HB[iterateurHB]);
-        int index2 = keyNoirStr.find(HB[iterateurHB]);
-        Sleep(300);
-        if (index == -1 && index2 == -1) {
 
-        } else if (index == -1) {
-            noir[index2]->setMusicOn();       
-            isPressedNoir[index2] = true;
-            noir[index2]->playMusic();
-            Sleep(350);
-        }
-        else if (index2 == -1)
-        {
-            blanc[index]->setMusicOn();  
-            isPressedBlanc[index] = true;
-            blanc[index]->playMusic();
-            Sleep(350);
-         }
-      
-       
-       if (iterateurHB == HB.size() -1  ) { 
-            testHB = false; 
-            oldIndex = 0; oldIndex2 = 0; iterateurHB = 0; 
-            isPressedNoir.assign(isPressedNoir.size(), false); 
-            isPressedBlanc.assign(isPressedBlanc.size(), false);
-        }
-      else {
-            iterateurHB++;
-        }
-         oldIndex = index;
-         oldIndex2 = index2;
-    }*/
+    //sheet musics
+    playSong(testHB, HB, 1);
+    playSong(testCP, Carr, 2);
+    playSong(testCustom, CustomSheet, 3);
 
-    playSong(testHB, iterateurHB, HB);
+    
 
-    //Pirates des caraibes
-    if (testCP && iterateurCP < Carr.size()) 
-    {
-        if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
-        if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
-        int index = keyBlancStr.find(Carr[iterateurCP]);
-        int index2 = keyNoirStr.find(Carr[iterateurCP]);
-        Sleep(300);
-        if (index == -1) {
-            noir[index2]->setMusicOn();
-            isPressedNoir[index2] = true;
-            noir[index2]->playMusic();
-            Sleep(300);
-        }
-        else if (index2 == -1)
-        {
-            blanc[index]->setMusicOn();
-            isPressedBlanc[index] = true;
-            blanc[index]->playMusic();
-            Sleep(300);
-        }
-
-
-        if (iterateurCP == Carr.size() - 1) {
-            testCP = false; oldIndex = 0; oldIndex2 = 0; iterateurCP = 0;
-            isPressedNoir.assign(isPressedNoir.size(), false);
-            isPressedBlanc.assign(isPressedBlanc.size(), false);
-        }
-        else {
-            iterateurCP++;
-        }
-        oldIndex = index;
-        oldIndex2 = index2;
-
-    }
 
   // on remplit blanc et noir en les dessinant 
     auto it = noteBlanches.begin();
@@ -322,75 +289,11 @@ GLvoid affichage2D() {
     gluLookAt(camPos2D.getVx(), camPos2D.getVy(), camPos2D.getVz(), at2D.getVx(), at2D.getVy(), at2D.getVz(), upWorld.getVx(), upWorld.getVy(), upWorld.getVz());
     glMatrixMode(GL_MODELVIEW);
     glTranslatef(-4.0f, 0.0f, 0.0f);
-    // HappyBirthday
-    if (testHB && iterateurHB < HB.size()) {
-        if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
-        if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
-        int index = keyBlancStr.find(HB[iterateurHB]);
-        int index2 = keyNoirStr.find(HB[iterateurHB]);
-        Sleep(300);
-        if (index == -1) {
-            noir[index2]->setMusicOn();
-            isPressedNoir[index2] = true;
-            noir[index2]->playMusic();
-            Sleep(350);
-        }
-        else if (index2 == -1)
-        {
-            blanc[index]->setMusicOn();
-            isPressedBlanc[index] = true;
-            blanc[index]->playMusic();
-            Sleep(350);
-        }
 
-
-        if (iterateurHB == HB.size() - 1) {
-            testHB = false;
-            oldIndex = 0; oldIndex2 = 0; iterateurHB = 0;
-            isPressedNoir.assign(isPressedNoir.size(), false);
-            isPressedBlanc.assign(isPressedBlanc.size(), false);
-        }
-        else {
-            iterateurHB++;
-        }
-        oldIndex = index;
-        oldIndex2 = index2;
-    }
-
-    //Pirates des caraibes
-    if (testCP && iterateurCP < Carr.size()) {
-        if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
-        if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
-        int index = keyBlancStr.find(Carr[iterateurCP]);
-        int index2 = keyNoirStr.find(Carr[iterateurCP]);
-        Sleep(300);
-        if (index == -1) {
-            noir[index2]->setMusicOn();
-            isPressedNoir[index2] = true;
-            noir[index2]->playMusic();
-            Sleep(250);
-        }
-        else if (index2 == -1)
-        {
-            blanc[index]->setMusicOn();
-            isPressedBlanc[index] = true;
-            blanc[index]->playMusic();
-            Sleep(250);
-        }
-
-
-        if (iterateurCP == Carr.size() - 1) {
-            testCP = false; oldIndex = 0; oldIndex2 = 0; iterateurCP = 0;
-            isPressedNoir.assign(isPressedNoir.size(), false);
-            isPressedBlanc.assign(isPressedBlanc.size(), false);
-        }
-        else {
-            iterateurCP++;
-        }
-        oldIndex = index;
-        oldIndex2 = index2;
-
-    }
+    //sheet musics
+    playSong(testHB, HB, 1);
+    playSong(testCP, Carr, 2);
+    playSong(testCustom, CustomSheet, 3);
 
     auto it = noteBlanches.begin();
     for (int i = 0; i < 14; i++) {
@@ -541,10 +444,17 @@ GLvoid clavier(unsigned char touche, int x, int y) { // selon input
     if (touche == '9') {
             testHB = true; 
             testCP = false;
+            testCustom = false;
     }
     else if (touche == '2') {
             testCP = true;
-            testHB = false; 
+            testHB = false;
+            testCustom = false;
+    }
+    else if (touche == '8' && CustomSheet != "") {
+        testCP = false;
+        testHB = false;
+        testCustom = true;
     }
     if (touche == '0') {
         testHB = false; testCP = false;  isPressedNoir.assign(isPressedNoir.size(), false);
@@ -694,18 +604,29 @@ GLvoid redimensionner(int w, int h) {
 void main(int argc, char* argv[])
 {
     //choix du type du piano
-    cout << "Veuillez choisir le mode d'affichage ('1' pour l'affichage 2D, '2' pour l'affichage 3D)" << endl<<endl<<endl;
+    cout << "Veuillez choisir le mode d'affichage \n'1' pour l'affichage 2D \n'2' pour l'affichage 3D \n'3' pour  enregistrer une chanson a jouer (sequence de lettres)" << endl;
     int a;
     cin >> a;
     cout << endl;
-    cout << endl;
     // si les valeurs sont différents de 1 ou 2 on affiche le piano 3D
+    
+    if (a == 3) {
+        cout << "Veuillez entrer la séquence de notes a jouer"<< endl;
+        cin >> CustomSheet;
+        CustomSheet += "-";
+        cout << "Veuillez choisir le mode d'affichage \n'1' pour l'affichage 2D \n'2' pour l'affichage 3D" << endl;
+        cin >> a;
+    }
+    
     if (a != 1 && a != 2) {
         a = 2;
    }
     cout << "Apres avoir choisir le type, appuyez sur :" << endl ;
     cout << "2 pour jouer le debut des pirates des caraibes" << endl;
     cout << "9 pour jouer le debut de joyeux anniversaire" << endl;
+    if (CustomSheet != "") {
+        cout << "8 pour jouer la music que vous avez entrez" << endl;
+    }
     cout << "0 pour arreter la musique" << endl;
     // Initialisation de GLUT
     glutInit(&argc, argv);
