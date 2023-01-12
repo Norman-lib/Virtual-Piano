@@ -95,9 +95,50 @@ int iterateurHB = 0;
 int iterateurCP = 0;
 int oldIndex = -5;
 int oldIndex2 = -5;
-string HB = "qqsqfdqqsqgfqqkhgfduuhfgf"; 
+string HB = "qqsqfdqqsqgfqqkhgfduuhfgf-"; 
 //string Carr = "hhhhhhhthjjjolllmoojhjt";
-string Carr = "hklllm4445mmlklhklllm445mmlklh";
+string Carr = "hklllm4445mmlklhklllm445mmlklhhklll4555677656llm4456ll4mm4l4m-";
+
+void playSong(bool test, int iter , string sheet) {
+    if (test && iter < sheet.size()) {
+        if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
+        if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
+        int index = keyBlancStr.find(sheet[iter]);
+        int index2 = keyNoirStr.find(sheet[iter]);
+        Sleep(300);
+        if (index == -1 && index2 == -1) {
+
+        }
+        else if (index == -1) {
+            noir[index2]->setMusicOn();
+            isPressedNoir[index2] = true;
+            noir[index2]->playMusic();
+            Sleep(350);
+        }
+        else if (index2 == -1)
+        {
+            blanc[index]->setMusicOn();
+            isPressedBlanc[index] = true;
+            blanc[index]->playMusic();
+            Sleep(350);
+        }
+
+
+        if (iter == sheet.size() - 1) {
+            test = false;
+            oldIndex = 0; oldIndex2 = 0; iter = 0;
+            isPressedNoir.assign(isPressedNoir.size(), false);
+            isPressedBlanc.assign(isPressedBlanc.size(), false);
+        }
+        else {
+            iter++;
+            cout << iter << endl;
+        }
+        oldIndex = index;
+        oldIndex2 = index2;
+    }
+}
+
 // Definition de la fonction d'affichage
 // piano 3D
 GLvoid affichage3D() {
@@ -113,13 +154,15 @@ GLvoid affichage3D() {
     glTranslatef(-4.0f, 0.0f, 0.0f);
   
     // HappyBirthday
-    if (testHB && iterateurHB < HB.size()) {
+   /* if (testHB && iterateurHB < HB.size()) {
         if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
         if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
         int index = keyBlancStr.find(HB[iterateurHB]);
         int index2 = keyNoirStr.find(HB[iterateurHB]);
         Sleep(300);
-        if (index == -1) {
+        if (index == -1 && index2 == -1) {
+
+        } else if (index == -1) {
             noir[index2]->setMusicOn();       
             isPressedNoir[index2] = true;
             noir[index2]->playMusic();
@@ -145,10 +188,13 @@ GLvoid affichage3D() {
         }
          oldIndex = index;
          oldIndex2 = index2;
-    }
+    }*/
+
+    playSong(testHB, iterateurHB, HB);
 
     //Pirates des caraibes
-    if (testCP && iterateurCP < Carr.size()) {
+    if (testCP && iterateurCP < Carr.size()) 
+    {
         if (oldIndex == -1) { isPressedNoir[oldIndex2] = false; }
         if (oldIndex2 == -1) { isPressedBlanc[oldIndex] = false; }
         int index = keyBlancStr.find(Carr[iterateurCP]);
