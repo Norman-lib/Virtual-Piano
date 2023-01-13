@@ -68,9 +68,9 @@ vector<Note*> blanc;
 vector<Note*> noir;
 
 // vecteurs des keys du clavier 
-const char* keyBlanc = "qsdfghjklm4561";
+const char* keyBlanc = "qsdfghjklm456+";
 const char* keyNoir = "zetyuop$*7";
-string keyBlancStr = "qsdfghjklm4561";
+string keyBlancStr = "qsdfghjklm456+";
 string keyNoirStr = "zetyuop$*7";
 
 //un vecteur possedant l'état enfoncé ou relaché des bouttons
@@ -441,7 +441,7 @@ GLvoid clavier(unsigned char touche, int x, int y) { // selon input
             break;
         };
     };
-    if (touche == '9') {
+    if (touche == '1') {
             testHB = true; 
             testCP = false;
             testCustom = false;
@@ -451,7 +451,7 @@ GLvoid clavier(unsigned char touche, int x, int y) { // selon input
             testHB = false;
             testCustom = false;
     }
-    else if (touche == '8' && CustomSheet != "") {
+    else if (touche == '3' && CustomSheet != "") {
         testCP = false;
         testHB = false;
         testCustom = true;
@@ -622,10 +622,10 @@ void main(int argc, char* argv[])
         a = 2;
    }
     cout << "Apres avoir choisir le type, appuyez sur :" << endl ;
-    cout << "2 pour jouer le debut des pirates des caraibes" << endl;
-    cout << "9 pour jouer le debut de joyeux anniversaire" << endl;
+    cout << "1 pour jouer le debut des pirates des caraibes" << endl;
+    cout << "2 pour jouer le debut de joyeux anniversaire" << endl;
     if (CustomSheet != "") {
-        cout << "8 pour jouer la music que vous avez entrez" << endl;
+        cout << "3 pour jouer la music que vous avez entrez" << endl;
     }
     cout << "0 pour arreter la musique" << endl;
     // Initialisation de GLUT
